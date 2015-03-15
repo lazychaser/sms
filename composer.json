@@ -1,0 +1,29 @@
+{
+    "name": "kalnoy/sms",
+    "description": "Sms sending manager",
+
+    "require": {
+        "illuminate/support": "~5.0",
+        "illuminate/log": "~5.0",
+        "guzzlehttp/guzzle": "~5.2"
+    },
+
+    "license": "MIT",
+
+    "authors": [
+        {
+            "name": "Alexander Kalnoy",
+            "email": "lazychaser@gmail.com"
+        }
+    ],
+
+    "autoload": {
+        "psr-4": { "Kalnoy\\Sms\\": "src/" }
+    },
+
+    "minimum-stability": "stable",
+    "require-dev": {
+        "phpunit/phpunit": "~4.5",
+        "mockery/mockery": "0.9.*"
+    }
+}
