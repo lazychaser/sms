@@ -1,8 +1,9 @@
 <?php
 
-namespace Kalnoy\Sms;
+namespace Kalnoy\Sms\Integration;
 
 use Illuminate\Support\ServiceProvider;
+use Kalnoy\Sms\Manager;
 
 class SmsServiceProvider extends ServiceProvider {
 
@@ -19,7 +20,7 @@ class SmsServiceProvider extends ServiceProvider {
     public function register()
     {
         $this->publishes([
-            __DIR__.'/../config/sms.php' => config_path('sms.php'),
+            __DIR__.'/../../config/sms.php' => config_path('sms.php'),
         ]);
 
         $this->app->bindShared('sms', function ($app)
@@ -27,7 +28,13 @@ class SmsServiceProvider extends ServiceProvider {
             return new Manager($app);
         });
 
+        $this->app->bindShared('sms.driver', function ($app)
+        {
+            return $app['sms']->driver();
+        });
+
         $this->app->alias('sms', 'Kalnoy\Sms\Manager');
+        $this->app->alias('sms.driver', 'Kalnoy\Sms\Sender');
     }
 
     /**
@@ -35,6 +42,6 @@ class SmsServiceProvider extends ServiceProvider {
      */
     public function provides()
     {
-        return [ 'sms', 'Kalnoy\Sms\Manager' ];
+        return [ 'sms', 'Kalnoy\Sms\Manager', 'sms.driver', 'Kalnoy\Sms\Sender' ];
     }
 }
