@@ -2,9 +2,22 @@
 
 namespace Kalnoy\Sms;
 
+use GuzzleHttp\ClientInterface;
 use Illuminate\Support\Manager as BaseManager;
 
 class Manager extends BaseManager {
+
+    /**
+     * @var ClientInterface
+     */
+    private $client;
+
+    public function __construct($app, ClientInterface $client)
+    {
+        parent::__construct($app);
+
+        $this->client = $client;
+    }
 
     /**
      * @return LogSender
@@ -26,7 +39,7 @@ class Manager extends BaseManager {
         $password = $config->get('sms.smsc.password');
         $sender = $config->get('sms.sender_name');
 
-        return new SmscSender($login, $password, $sender);
+        return $this->setClient(new SmscSender($login, $password, $sender));
     }
 
     /**
@@ -37,5 +50,17 @@ class Manager extends BaseManager {
     public function getDefaultDriver()
     {
         return $this->app->make('config')->get('sms.driver', 'log');
+    }
+
+    /**
+     * @param AbstractSender $driver
+     *
+     * @return mixed
+     */
+    protected function setClient(AbstractSender $driver)
+    {
+        $driver->setHttpClient($this->client);
+
+        return $driver;
     }
 }

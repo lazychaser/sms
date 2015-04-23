@@ -2,6 +2,7 @@
 
 namespace Kalnoy\Sms\Integration;
 
+use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 use Kalnoy\Sms\Manager;
 
@@ -25,7 +26,7 @@ class SmsServiceProvider extends ServiceProvider {
 
         $this->app->bindShared('sms', function ($app)
         {
-            return new Manager($app);
+            return new Manager($app, new Client());
         });
 
         $this->app->bindShared('sms.driver', function ($app)
